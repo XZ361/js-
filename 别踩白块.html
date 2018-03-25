@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<style>
+			#main{position:relative;width: 400px;height: 400px;background: ;border: 2px solid green;margin: 0 auto;overflow: hidden;}
+			#container{width: 100%;height: 400px;top: -100px;position: relative;background: white;}
+			.row{width: 100%;height: 100px;}
+			.cell{
+				width: 100px;height: 100px;float: left;
+			}
+			.black{background: black;}
+			#score{
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<h1 id="score">0</h1>
+		<div id="main">
+			<div id="container"></div>
+		</div>
+	</body>
+	<script>
+		var clock=null;//全局变量，定时器操作句柄
+		var  state=0;//0初始化 ，3 以失败
+		var speed=2;
+		//创建初始化函数		
+		function init(){
+			for(var i=0;i<4;i++){//i<3,是为了给用户玩游戏留有一定的余地，不会一开始就输
+				crow();
+			}
+			$('main').onclick=function(ev){
+				
+				judge(ev);
+			}
+		}
+		//判断函数
+		function judge(ev){
+			if(state==3){
+				alert('失败者禁入！');
+				return;
+			}
+			if(ev.target.className.indexOf('black')==-1){
+				
+					
+				}else{
+				ev.target.className='cell';	
+				ev.target.parentNode.pass=1;
+				score();
+					
+				}
+		}
+		
+		//启动
+		function start(){
+			clock=window.setInterval('move()',30);//每30毫秒执行一次，人眼看不出来
+		}
+		//动画
+		function move(){
+			var con=$('container');
+			var top=parseInt(window.getComputedStyle(con,null)['top']);
+			if(speed+top>0){//若一步走过，则重置为零
+				top=0;
+			}else{
+			top+=speed;	//
+			}
+			
+			
+			con.style.top=top+'px';
+			if(top==0){
+				crow();//创建新的行
+				con.style.top='-100px';
+				drow();//删除旧的行
+			}
+			else if(top=-98){
+				var rows=con.childNodes;
+				if((rows.length==5)&&(rows[rows.length-1].pass!==1)){
+					
+					fail();
+				}
+			}
+		}
+		//输
+		function fail(){
+				clearInterval(clock);//清除定时器
+				state=3;
+				alert('结束!');
+		}
+		//jiashu
+		function jiasu(){
+			speed+=2;
+			if(speed==2)
+			{
+				alert('你的电脑太慢了！');
+			}
+		}
+		//积分
+		function score(){
+			var newscore=parseInt($('score').innerHTML)+1;
+			$('score').innerHTML=newscore;
+			if(newscore%10==0){
+				jiasu();
+			}
+		}
+		function crow(className){
+			var con=$('container');
+			var row=cdiv('row');//创建rowdiv块
+			var classes=creatSn();
+			for( var i=0;i<4;i++){
+				row.appendChild(cdiv(classes[i]));//创建4个子div
+			}
+			if(con.firstChild==null){
+			con.appendChild(row);//再将创建好的rowdiv加到容器中
+								
+			}
+			else{
+				con.insertBefore(row,con.firstChild);
+			}
+
+		}
+		
+		//删除最后一行
+		function drow(){
+			var con=$('container');
+			if(con.childNodes.length==6){
+			con.removeChild(con.lastChild);
+								
+			}
+
+		}
+		//创建div块的函数
+		function cdiv(className){
+			var div=document.createElement('div');
+			div.className=className;
+			return div;
+		}
+		//返回一个数组，随机其中一个单元，其值为cell black，其他皆为cell
+		function creatSn(){
+			var arr=['cell','cell','cell','cell'];
+			var i=Math.floor(Math.random()*4);//获取随机数，并将其增大4倍，然后四舍五入，得到从0~3 的随机数
+			arr[i]='cell black';
+			return arr;
+		}
+		
+		//获取id对象，封装一个函数
+		function $(id){
+			return document.getElementById(id);
+		}
+		init();
+		start();
+	</script>
+</html>

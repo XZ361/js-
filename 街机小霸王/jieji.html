@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="keywords" content=""/>
+		<meta name="description" content=""/>
+		<title>游戏</title>
+		<style>
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			html{
+				height: 100%;
+			}
+			body{
+				background: url(img/bg.jpg) center 0;height: 100%;background-size: 100% 100%;
+			}
+			#site{
+				position: relative;height: 100%;
+			}
+			img{
+				position: absolute;width: 300px;height: 350px;bottom: 50px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="site">
+			<img src="img/stand.gif" alt="" id="MC"/>
+		</div>
+		<script type="text/javascript">
+		/*1:document对象指向HTML
+		 * 2：如何知道我按下的是啥键
+		 * 所有的事件函数都有一个事件对象存在于这个参数中event
+		 * event.keycode获取键盘的键吗
+		 * 37 左
+		 * 38上 
+		 * 39 右 
+		 * 40 下
+		 * 用if判断或switch可以实现游戏人物的技能开发，属于面向过程开发，只要将过程描述清楚即可，当过程过于复杂时，则不适合用面向过程开发
+		 * 并且不利于项目的维护及二次开发
+		 * 因此选用面向对象开发
+		 * 3，用JavaScript，他是基于原型的面向对象语言，实实在在存在的实体成为对象，对象就有属性和方法
+		 * Java c++ Python 属于基于类的面向对象语言
+		 * 可以用一个值去描述的都是属性
+		 * 对象拥有的技能成为方法
+		 * 将游戏看为一个大的对象或类
+		 * javascript基于底层原理是没有类的概念的
+		 * es5中没有类，es6中有类（语法糖），现在将整个游戏看做一个大类
+		 * 4：按下键盘时触发动作
+		 * 游戏当中放啥东西或扩展啥功能，需要游戏开发者考虑，即需要设计模式
+		 * 所谓设计模式就是将代码设计的漂亮点，维护性强，可读性高，而二次开发性强
+		 * 在JavaScript用的最多的设计模式为19种
+		 * 5：this指向当前调用方法或属性的实例，在全局中即为window
+		 * game.__proto__==Game.prototype;、、———proto__是神秘原型
+		 * 6：for in遍历枚举对象
+		 * 7:call(obj)方法，改变函数内部的this指向
+		 */
+		
+		
+		var yagami=document.getElementById('MC');
+		 var game=new Game(yagami);//实例化一个游戏对象，即初始化，该对象中拥有属性和方法
+		function Game(obj){
+			
+			//构造函数接受yagami
+			//创建游戏类，类似于基于类的class，定义，现在只是个构造的概念，需要打开
+			/*this.action={
+				"chifan":function(){
+					console.log('hello');
+				}实例化时，game对象会将每个技能执行一遍，当技能太多时，明显效率会降低，不太合适，故将其放在外面
+			};*///this指向对象game、、放技能，{}是个对像
+			this.obj=obj;//将获取的参数付给实例的属性
+		}
+		Game.prototype.active={//在此处放技能，对应则相应的键值
+			
+			"37":function(){
+				this.obj.src="img/retreat.gif";//当访问属性时，属性返回一个函数
+//				this.obj.left=30+'px';
+			},
+			"38":function(){
+				this.obj.src="img/sahng.gif";
+				
+			},
+			"65":function(){
+				this.obj.src="img/1.gif";
+				
+			},
+			"66":function(){
+				this.obj.src="img/2.gif";
+				
+			},
+			"39":function(){
+				this.obj.src="img/advance.gif";
+				this.obj.left='30px';
+			},
+			"40":function(){
+			this.obj.src="img/7490881c38cfba5ef724e4ba.gif";
+				
+			}
+			
+		};//Game.prototype本身即是对象，prototype是构造函数的原型
+		
+		//定义一个按下
+		Game.prototype.keydown=function(keyCode){
+			/*for(var key in this.active){
+				if(keyCode==key){
+					this.active[key]();
+				}//常规方法
+			}*/
+			this.active[keyCode].call(this);//就既然已经传了参数，那就可以直接通过键值调用相应方法
+		}
+		
+		
+		
+		document.onkeydown=function(event){//所有事件函数中都有事件参数，event是对象
+			game.keydown(event.keyCode)
+		}
+		</script>
+	</body>
+</html>
